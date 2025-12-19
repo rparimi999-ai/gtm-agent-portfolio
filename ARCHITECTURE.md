@@ -79,3 +79,73 @@ If you wanted to productionize:
 - add versioning for prompts/heuristics and eval cases
 
 The repo is built to make that path straightforward.
+
+## From mock agent to production system
+
+This repo is intentionally mock-first. That is not a limitation. It is how agent behavior is stabilized before integration risk is introduced.
+
+Moving from this portfolio to a production system would happen in clear, incremental steps.
+
+### 1. Preserve the agent contract
+The most important production artifact is not the model or the prompt. It is the contract:
+
+- input shape
+- output structure
+- required explanations
+- action types and approval requirements
+
+These contracts are already defined and enforced by evals. In production, they remain unchanged. Integrations adapt to the contract, not the other way around.
+
+---
+
+### 2. Introduce an action executor
+In this repo, agents emit actions as structured objects. In production, those actions would flow through a centralized executor responsible for:
+
+- enforcing approval rules
+- validating payloads
+- executing side effects (CRM updates, Slack posts)
+- logging outcomes and failures
+
+This keeps agents focused on reasoning and prevents integration logic from leaking into agent code.
+
+---
+
+### 3. Swap mock connectors for real adapters
+Salesforce and Slack are modeled as abstract actions here. Production introduces adapters that translate those actions into real API calls.
+
+This layer:
+- handles authentication and retries
+- normalizes API failures
+- emits structured telemetry
+
+Agents do not change when adapters are introduced. Only the executor does.
+
+---
+
+### 4. Add observability before adding autonomy
+Before increasing automation, the system would add visibility:
+
+- per-run traces (inputs, outputs, actions)
+- decision distributions over time
+- eval pass rates in CI and production shadow runs
+
+This allows teams to detect drift, regressions, and unintended behavior early.
+
+---
+
+### 5. Graduate automation deliberately
+Only after behavior is stable and observable would autonomy increase:
+
+- remove approval gates selectively
+- automate low-risk actions first
+- keep evals as a permanent regression harness
+
+In production, evals do not disappear. They become the safety rail that allows iteration without fear.
+
+---
+
+The core idea is simple:  
+**stabilize behavior first, integrate second, automate last.**
+
+This repo is designed to make that progression explicit.
+
