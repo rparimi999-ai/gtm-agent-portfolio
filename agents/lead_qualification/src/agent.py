@@ -1,4 +1,3 @@
-cat > agents/lead_qualification/src/agent.py <<'PY'
 from __future__ import annotations
 
 import re
@@ -62,7 +61,7 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
     intent = 0
     reasons: List[str] = []
 
-    # --- FIT (cap ~50) ---
+    # FIT
     if industry in TARGET_INDUSTRIES:
         fit += 15
         reasons.append("fit present")
@@ -88,7 +87,7 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
     if region in {"na", "eu"}:
         fit += 5
 
-    # --- INTENT (cap ~50) ---
+    # INTENT
     has_migration_intent = _kw_present(use_case, ["migrat", "cloud", "moderniz", "workload"])
     if use_case:
         reasons.append("use case present")
@@ -100,7 +99,6 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
     else:
         reasons.append("no migration intent")
 
-    # security gating
     if _kw_present(use_case + " " + notes, ["security", "infosec", "compliance", "data residency"]):
         reasons.append("security as gating item")
 
@@ -128,20 +126,19 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
     else:
         intent += 2
 
-    # penalties to match eval expectations
     if not use_case:
         intent = min(intent, 6)
         reasons.append("insufficient intent")
 
-    score = fit + intent
-    score = max(0, min(100, score))
+    score = max(0, min(100, fit + intent))
 
-    # Keep “strong fit” as a phrase when fit is high but intent is weak
     if fit >= 40:
         reasons.append("strong fit")
 
+    reasons = list(dict.fromkeys(reasons))
+
     return score, {
-        "reasons": list(dict.fromkeys(reasons)),  # de-dupe keep order
+        "reasons": reasons,
         "fit": fit,
         "intent": intent,
         "budget": budget,
@@ -152,7 +149,6 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
 
 
 def decide(score: int, meta: Dict[str, Any]) -> Tuple[str, float]:
-    # stricter qualify rule to prevent LQ-004 style mis-qualify
     if meta["budget"] == "approved" and meta["timeline"] == "near" and meta["has_migration_intent"] and meta["is_senior"]:
         if score >= 75:
             return "qualify", 0.9
@@ -182,7 +178,6 @@ def run(payload: Dict[str, Any]) -> Dict[str, Any]:
         {"type": "slack_post", "target": "ae-channel", "risk": "low", "requires_approval": False, "payload": {"message": slack_msg}}
     ]
 
-    # never auto-update SF unless we truly qualify under strict rule
     requires_approval = True
     if decision == "qualify":
         requires_approval = False
@@ -205,4 +200,3 @@ def run(payload: Dict[str, Any]) -> Dict[str, Any]:
         "confidence": round(float(confidence), 2),
         "requires_approval": requires_approval,
     }
-PY
