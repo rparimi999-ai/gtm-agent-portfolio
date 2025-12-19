@@ -1,0 +1,106 @@
+{
+  "summary": "3 late-stage opportunities reviewed. 2 show material risk drivers requiring inspection.",
+  "portfolio_risk_score": 58,
+  "ranked_risks": [
+    {
+      "opportunity_id": "006AAA000000001",
+      "name": "Acme Robotics . Migration",
+      "risk_score": 78,
+      "flags": [
+        "stale_activity",
+        "missing_economic_buyer",
+        "paper_process_unknown"
+      ],
+      "explanation": [
+        "Last activity is 38 days old for a deal in Proposal stage",
+        "Economic buyer not identified",
+        "Paper process not captured, increases close-date volatility"
+      ],
+      "evidence": [
+        "last_activity_date=2025-11-10",
+        "meddpicc.economic_buyer is empty",
+        "meddpicc.paper_process is empty"
+      ],
+      "manager_inspection_prompts": [
+        "Who signs the final decision and have we spoken to them directly?",
+        "What are the concrete steps and dates in the paper process?",
+        "What is scheduled this week to re-activate momentum?"
+      ]
+    },
+    {
+      "opportunity_id": "006AAA000000002",
+      "name": "Northwind Health . Modernization",
+      "risk_score": 66,
+      "flags": [
+        "no_metrics",
+        "missing_champion"
+      ],
+      "explanation": [
+        "No quantified success metrics captured, weakens value narrative in Negotiation",
+        "No champion identified, reduces internal pull against competitor"
+      ],
+      "evidence": [
+        "meddpicc.metrics is empty",
+        "meddpicc.champion is empty",
+        "competition=Azure"
+      ],
+      "manager_inspection_prompts": [
+        "What measurable outcomes justify the spend for the CFO?",
+        "Who is pushing this internally and what do they gain if it closes?",
+        "What is the competitor angle and why do we win?"
+      ]
+    },
+    {
+      "opportunity_id": "006AAA000000003",
+      "name": "Globex Retail . Data Lake",
+      "risk_score": 28,
+      "flags": [],
+      "explanation": [
+        "Recent activity and most MEDDPICC fields present",
+        "Paper process is known and in motion"
+      ],
+      "evidence": [
+        "last_activity_date=2025-12-17",
+        "meddpicc.paper_process=Redlines pending"
+      ],
+      "manager_inspection_prompts": []
+    }
+  ],
+  "actions": [
+    {
+      "type": "slack_post",
+      "target": "ae-channel",
+      "risk": "low",
+      "requires_approval": false,
+      "payload": {
+        "message": "Pipeline Risk Digest . 2 deals need inspection.\n1) Acme Robotics (Risk 78): stale activity (11/10), no Econ Buyer, paper process unknown. Prompts: Who signs. What are paper steps/dates. What re-activates this week.\n2) Northwind Health (Risk 66): no metrics, no champion, competing with Azure. Prompts: quantify outcomes for CFO. identify champion. sharpen win story.\n3) Globex Retail (Risk 28): looks healthy."
+      }
+    },
+    {
+      "type": "salesforce_create_task",
+      "target": "opportunity",
+      "risk": "med",
+      "requires_approval": true,
+      "payload": {
+        "opportunity_id": "006AAA000000001",
+        "subject": "Confirm economic buyer and map paper process",
+        "notes": "Deal in Proposal with stale activity. Identify signer and procurement steps with dates.",
+        "due_in_days": 3
+      }
+    },
+    {
+      "type": "salesforce_create_task",
+      "target": "opportunity",
+      "risk": "med",
+      "requires_approval": true,
+      "payload": {
+        "opportunity_id": "006AAA000000002",
+        "subject": "Capture success metrics and identify champion",
+        "notes": "Negotiation with competitor present. Quantify outcomes for CFO and name internal champion.",
+        "due_in_days": 3
+      }
+    }
+  ],
+  "confidence": 0.86,
+  "requires_approval": true
+}
