@@ -1,13 +1,10 @@
+cat > shared/evals/metrics.py <<'PY'
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional
 
 
 def _get(d: Dict[str, Any], path: str) -> Any:
-    """
-    Get nested dict key by dotted path, e.g. "a.b.c".
-    Returns None if missing.
-    """
     cur: Any = d
     for part in path.split("."):
         if not isinstance(cur, dict) or part not in cur:
@@ -51,22 +48,27 @@ def assert_range(actual: Any, lo: float, hi: float, label: str) -> Optional[str]
 
 
 def assert_contains(haystack: Any, needle: str, label: str) -> Optional[str]:
-    """
-    Works for strings and lists of strings.
-    """
     if haystack is None:
         return f"{label}: expected to contain {needle!r}, got None"
 
+    # string
     if isinstance(haystack, str):
         if needle.lower() not in haystack.lower():
             return f"{label}: expected to contain {needle!r}, got {haystack!r}"
         return None
 
-    if isinstance(haystack, list):
-        # list of strings (or mixed)
-        joined = " ".join([str(x) for x in haystack])
+    # list/tuple
+    if isinstance(haystack, (list, tuple)):
+        joined = " ".join(str(x) for x in haystack)
         if needle.lower() not in joined.lower():
-            return f"{label}: expected list to contain {needle!r}, got {haystack!r}"
+            return f"{label}: expected list to contain {needle!r}, got {list(haystack)!r}"
+        return None
+
+    # dict
+    if isinstance(haystack, dict):
+        joined = " ".join([str(k) + " " + str(v) for k, v in haystack.items()])
+        if needle.lower() not in joined.lower():
+            return f"{label}: expected dict to contain {needle!r}, got {haystack!r}"
         return None
 
     return f"{label}: unsupported type for contains (actual={type(haystack).__name__})"
@@ -90,3 +92,4 @@ def assert_min_count(actual: Any, min_count: int, label: str) -> Optional[str]:
     if len(actual) < min_count:
         return f"{label}: expected count >= {min_count}, got {len(actual)}"
     return None
+PY
