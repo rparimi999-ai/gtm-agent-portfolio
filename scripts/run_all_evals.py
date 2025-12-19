@@ -1,65 +1,49 @@
 from __future__ import annotations
 
-import json
+import importlib
 import os
-from typing import Any, Dict, Tuple
+import sys
+from typing import Any, Dict, Callable, List, Tuple
 
 from shared.evals.runner import run_eval_file
 
-
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, REPO_ROOT)
+
+AGENTS = [
+    ("lead_qualification", "agents.lead_qualification.src.agent"),
+    ("meeting_followup", "agents.meeting_followup.src.agent"),
+    ("pipeline_risk_inspector", "agents.pipeline_risk_inspector.src.agent"),
+]
 
 
-def _load_demo_output(agent_dir: str) -> Dict[str, Any]:
-    path = os.path.join(REPO_ROOT, "agents", agent_dir, "demo", "output.json")
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def _predict_from_demo_output(agent_dir: str):
-    """
-    Temporary predict function.
-    Returns the same demo output for every case.
-    This proves the eval plumbing works, even before agent logic is implemented.
-
-    Later: replace with real agent execution.
-    """
-    demo_out = _load_demo_output(agent_dir)
-
-    def _predict(_case_input: Dict[str, Any]) -> Dict[str, Any]:
-        return demo_out
-
-    return _predict
+def _predict_fn(module_path: str) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
+    mod = importlib.import_module(module_path)
+    if not hasattr(mod, "run"):
+        raise RuntimeError(f"Missing run() in {module_path}")
+    return getattr(mod, "run")
 
 
 def main() -> None:
-    targets = [
-        ("lead_qualification", "lead_qualification"),
-        ("meeting_followup", "meeting_followup"),
-        ("pipeline_risk_inspector", "pipeline_risk_inspector"),
-    ]
-
     total_pass = 0
     total_fail = 0
 
-    print("Running evals (demo-output mode)\n")
+    print("Running evals (real agent logic)\n")
 
-    for agent_key, agent_dir in targets:
-        eval_path = os.path.join(REPO_ROOT, "agents", agent_dir, "evals", "cases.jsonl")
-
+    for agent_name, module_path in AGENTS:
+        eval_path = os.path.join(REPO_ROOT, "agents", agent_name, "evals", "cases.jsonl")
         if not os.path.exists(eval_path):
-            print(f"[SKIP] {agent_key}: missing eval file {eval_path}")
+            print(f"[SKIP] {agent_name}: missing {eval_path}\n")
             continue
 
-        predict_fn = _predict_from_demo_output(agent_dir)
-        passed, failed, results = run_eval_file(agent_key, eval_path, predict_fn)
+        predict = _predict_fn(module_path)
+        passed, failed, results = run_eval_file(agent_name, eval_path, predict)
 
         total_pass += passed
         total_fail += failed
 
-        print(f"{agent_key}: {passed} passed, {failed} failed")
+        print(f"{agent_name}: {passed} passed, {failed} failed")
 
-        # Print failures with case ids and reasons
         if failed:
             for r in results:
                 if not r.passed:
@@ -70,7 +54,6 @@ def main() -> None:
 
     print(f"TOTAL: {total_pass} passed, {total_fail} failed")
 
-    # Exit code for CI later
     if total_fail:
         raise SystemExit(1)
 
