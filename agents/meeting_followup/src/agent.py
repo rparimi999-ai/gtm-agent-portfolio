@@ -1,4 +1,3 @@
-cat > agents/meeting_followup/src/agent.py <<'PY'
 from __future__ import annotations
 
 import re
@@ -16,7 +15,6 @@ def run(payload: Dict[str, Any]) -> Dict[str, Any]:
     opp = payload.get("opportunity") or payload.get("meeting", {}).get("opportunity") or {}
     t = transcript.lower()
 
-    # Requirements
     requirements: List[str] = []
     if "eu data residency" in t:
         requirements.append("EU data residency")
@@ -25,7 +23,6 @@ def run(payload: Dict[str, Any]) -> Dict[str, Any]:
     if "sso" in t:
         requirements.append("SSO")
 
-    # Competition
     competition: List[str] = []
     if "azure" in t:
         competition.append("Azure")
@@ -34,38 +31,22 @@ def run(payload: Dict[str, Any]) -> Dict[str, Any]:
     if "snowflake" in t:
         competition.append("Snowflake")
 
-    # Metrics
     metrics: List[str] = []
     metrics.extend(re.findall(r"\b\d{1,3}%\b", transcript))
     if "half" in t:
         metrics.append("half")
 
-    # Next steps (simple heuristics)
     seller_actions: List[str] = []
-    for phrase in [
-        "send estimate",
-        "send pricing",
-        "send a draft plan",
-        "send high-level migration plan",
-        "provide estimate",
-    ]:
-        if phrase in t:
-            seller_actions.append(phrase)
-
-    if "security review" in t or "security workshop" in t:
+    if "send" in t and "estimate" in t:
+        seller_actions.append("send estimate")
+    if "security" in t and ("review" in t or "workshop" in t):
         seller_actions.append("schedule security workshop/review")
 
     customer_actions: List[str] = []
-    for phrase in [
-        "loop in",
-        "share the final vendor list",
-        "review internally",
-        "get back to you",
-        "book a workshop",
-        "schedule a security review",
-    ]:
-        if phrase in t:
-            customer_actions.append(phrase)
+    if "loop in" in t:
+        customer_actions.append("loop in stakeholders")
+    if "procurement" in t:
+        customer_actions.append("engage procurement")
 
     due_dates: List[str] = []
     for token in ["friday", "next tuesday", "tuesday", "jan 10", "january 10", "next week", "q1"]:
@@ -76,18 +57,15 @@ def run(payload: Dict[str, Any]) -> Dict[str, Any]:
     if "cio" in t:
         decision_process["approver"] = "CIO"
     if "procurement" in t:
-        decision_process["paper_process"] = "Procurement involved"
+        decision_process["paper_process"] = "Procurement"
     if "redlines" in t:
-        decision_process["paper_process_detail"] = "Redlines mentioned"
+        decision_process["paper_process_detail"] = "redlines"
 
     risks: List[str] = []
     open_questions: List[str] = []
     if "security" in t:
         risks.append("security gating item")
         open_questions.append("Which controls are required for approval?")
-    if "eu data residency" in t:
-        risks.append("EU data residency constraints")
-        open_questions.append("Which workloads must remain in-region?")
 
     extracted = {
         "requirements": requirements,
@@ -136,4 +114,3 @@ def run(payload: Dict[str, Any]) -> Dict[str, Any]:
         "confidence": 0.83,
         "requires_approval": True,
     }
-PY
