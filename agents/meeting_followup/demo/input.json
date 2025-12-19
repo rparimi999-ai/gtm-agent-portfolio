@@ -1,0 +1,17 @@
+{
+  "meeting": {
+    "date": "2025-12-18",
+    "attendees": [
+      {"name": "Maya Chen", "role": "Director of Data Platform", "company": "Acme Robotics"},
+      {"name": "Jordan Lee", "role": "Solutions Architect", "company": "YourCo"}
+    ],
+    "opportunity": {
+      "id": "006XXXXXXXXXXXX",
+      "name": "Acme Robotics . Cloud Migration",
+      "stage": "Discovery",
+      "amount": 450000,
+      "close_date": "2026-03-31"
+    }
+  },
+  "transcript": "Maya: Our ERP and analytics stack are on-prem and we are hitting scaling limits. We want to move core workloads to AWS over the next 2 quarters.\nJordan: What does success look like?\nMaya: Cut batch processing time by 40% and reduce infra outages. Security is a gating item. We need SSO integration and encryption at rest. Also, we need a plan for data residency for EU customers.\nJordan: Who else is involved in the decision?\nMaya: I own the technical evaluation. Procurement will run the paper process. Our CIO signs off. I can loop in the security lead next week.\nJordan: What are the next steps?\nMaya: Send a high-level migration plan and an estimate. Also, confirm whether you support EU residency. We'll schedule a security review next Tuesday.\nJordan: Timeline?\nMaya: We want a proposal by Jan 10. If security review goes well, we can start the pilot in February."
+}
