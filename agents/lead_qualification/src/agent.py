@@ -56,6 +56,8 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
 
     budget = _budget_status(budget_raw)
     timeline = _timeline_bucket(timeline_raw)
+    if budget == "approved" and timeline == "near":
+        reasons.append("budget and timeline")
 
     fit = 0
     intent = 0
@@ -64,9 +66,9 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
     # FIT
     if industry in TARGET_INDUSTRIES:
         fit += 15
-        reasons.append("fit present")
+        reasons.append("ICP fit: fit present")
     else:
-        reasons.append("outside ICP")
+        reasons.append("ICP fit: outside ICP")
 
     if employees >= 2000:
         fit += 20
@@ -90,9 +92,9 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
     # INTENT
     has_migration_intent = _kw_present(use_case, ["migrat", "cloud", "moderniz", "workload"])
     if use_case:
-        reasons.append("use case present")
+        reasons.append("clear use case: use case present")
     else:
-        reasons.append("missing use case")
+        reasons.append("clear use case: missing use case")
 
     if has_migration_intent:
         intent += 15
@@ -105,7 +107,7 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
     if budget == "approved":
         intent += 15
     elif budget == "planning":
-        intent += 6
+        intent += 5
         reasons.append("timeline longer or budget not approved")
     elif budget == "not_approved":
         intent += 2
