@@ -3,12 +3,13 @@ from __future__ import annotations
 import importlib
 import os
 import sys
-from typing import Any, Dict, Callable, List, Tuple
+from typing import Dict, Callable
 
-from shared.evals.runner import run_eval_file
-
+# Ensure repo root is on path BEFORE importing shared/*
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, REPO_ROOT)
+
+from shared.evals.runner import run_eval_file  # noqa: E402
 
 AGENTS = [
     ("lead_qualification", "agents.lead_qualification.src.agent"),
@@ -17,7 +18,7 @@ AGENTS = [
 ]
 
 
-def _predict_fn(module_path: str) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
+def _predict_fn(module_path: str) -> Callable[[Dict], Dict]:
     mod = importlib.import_module(module_path)
     if not hasattr(mod, "run"):
         raise RuntimeError(f"Missing run() in {module_path}")
