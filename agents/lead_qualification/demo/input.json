@@ -1,0 +1,13 @@
+{
+  "lead": {
+    "company": "Acme Robotics",
+    "industry": "Manufacturing",
+    "employees": 850,
+    "region": "NA",
+    "title": "VP Engineering",
+    "source": "Web form",
+    "use_case": "Migrate legacy ERP to cloud",
+    "budget": "Approved",
+    "timeline": "90 days"
+  }
+}
