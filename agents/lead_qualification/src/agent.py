@@ -56,12 +56,12 @@ def score_lead(lead: Dict[str, Any]) -> Tuple[int, Dict[str, Any]]:
 
     budget = _budget_status(budget_raw)
     timeline = _timeline_bucket(timeline_raw)
-    if budget == "approved" and timeline == "near":
-        reasons.append("budget and timeline")
 
     fit = 0
     intent = 0
     reasons: List[str] = []
+      if budget == "approved" and timeline == "near":
+        reasons.append("budget and timeline")
 
     # FIT
     if industry in TARGET_INDUSTRIES:
