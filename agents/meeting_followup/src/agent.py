@@ -32,7 +32,7 @@ def run(payload: Dict[str, Any]) -> Dict[str, Any]:
         competition.append("Snowflake")
 
     metrics: List[str] = []
-    metrics.extend(re.findall(r"\b\d{1,3}%\b", transcript))
+    metrics.extend(re.findall(r"\d{1,3}\s*%", transcript))
     if "half" in t:
         metrics.append("half")
 
@@ -114,3 +114,4 @@ def run(payload: Dict[str, Any]) -> Dict[str, Any]:
         "confidence": 0.83,
         "requires_approval": True,
     }
+
