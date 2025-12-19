@@ -1,0 +1,20 @@
+{
+  "decision": "qualify",
+  "score": 82,
+  "summary": "Strong ICP fit with clear migration intent and budget.",
+  "explanation": [
+    "Company size and industry match target ICP",
+    "Senior technical buyer identified",
+    "Explicit cloud migration use case",
+    "Budget and timeline confirmed"
+  ],
+  "actions": [
+    {
+      "type": "slack_post",
+      "target": "ae-channel",
+      "message": "Qualified lead (82). Manufacturing ICP, VP Eng buyer, ERP migration in 90 days. Next step: schedule discovery."
+    }
+  ],
+  "confidence": 0.87,
+  "requires_approval": false
+}
