@@ -77,6 +77,7 @@ shared/
 scripts/
   run_agent.py
   run_all_evals.py
+
 Each agent exposes a single run(payload) entrypoint.
 
 Shared eval logic enforces consistent expectations across agents.
@@ -84,15 +85,10 @@ Shared eval logic enforces consistent expectations across agents.
 Salesforce and Slack are modeled as actions, not live side effects.
 
 Run evals locally
-bash
-Copy code
 git clone https://github.com/rparimi999-ai/gtm-agent-portfolio.git
 cd gtm-agent-portfolio
 python scripts/run_all_evals.py
 Expected output:
-
-makefile
-Copy code
 lead_qualification: 8 passed, 0 failed
 meeting_followup: 6 passed, 0 failed
 pipeline_risk_inspector: 6 passed, 0 failed
@@ -102,6 +98,7 @@ Evals are the contract. If behavior changes, evals fail.
 This makes agent behavior explicit and regression-safe.
 
 How to read this repo
+
 If you have limited time:
 
 Read this README.
@@ -115,6 +112,7 @@ Open any agent’s src/agent.py to see how that behavior is implemented.
 This repo is meant to be read, not just executed.
 
 Design principles
+
 Mock before integrate
 Behavior is validated before touching real systems.
 
@@ -130,6 +128,7 @@ Tests define correctness, not just code paths.
 This repo intentionally avoids end-to-end integrations to keep agent behavior auditable.
 
 Notes for reviewers
+
 All agents expose a single run(payload) entrypoint.
 
 Outputs are structured and bounded.
