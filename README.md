@@ -10,8 +10,6 @@ Each agent:
 
 This repo is mock-first and runs locally. Agent behavior is inspectable, testable, and reviewable by design.
 
----
-
 ## What this repo demonstrates
 
 This is not a collection of demos. It shows how to design **reviewable, production-ready GTM agents** with:
@@ -22,8 +20,6 @@ This is not a collection of demos. It shows how to design **reviewable, producti
 - eval-driven development, where behavior is specified before automation
 
 The goal is to make agent behavior debuggable, auditable, and trustworthy.
-
----
 
 ## Agents
 
@@ -36,8 +32,6 @@ Routes inbound leads, scores fit and intent, explains the decision, and proposes
 - guardrails around CRM updates
 - explainable decisions rather than opaque labels
 
----
-
 ### Meeting Follow-up Agent
 Converts unstructured meeting transcripts into structured next steps, risks, metrics, and CRM suggestions.
 
@@ -47,8 +41,6 @@ Converts unstructured meeting transcripts into structured next steps, risks, met
 - approval-gated CRM actions
 - safe Slack summaries with basic PII redaction
 
----
-
 ### Pipeline Risk Inspector
 Analyzes pipeline using MEDDPICC-style heuristics and flags execution risk with manager-ready explanations.
 
@@ -57,8 +49,6 @@ Analyzes pipeline using MEDDPICC-style heuristics and flags execution risk with 
 - explainability with supporting evidence
 - calibrated risk scoring
 - consistent outputs for forecast inspection
-
----
 
 ## Repo structure
 
