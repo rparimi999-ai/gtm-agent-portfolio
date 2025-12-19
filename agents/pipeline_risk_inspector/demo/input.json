@@ -1,0 +1,59 @@
+{
+  "as_of_date": "2025-12-18",
+  "opportunities": [
+    {
+      "id": "006AAA000000001",
+      "name": "Acme Robotics . Migration",
+      "stage": "Proposal",
+      "amount": 450000,
+      "close_date": "2026-01-15",
+      "last_activity_date": "2025-11-10",
+      "meddpicc": {
+        "metrics": "Reduce batch time 40%",
+        "economic_buyer": "",
+        "decision_criteria": "Security, residency, cost",
+        "decision_process": "Maya eval . CIO approval",
+        "paper_process": "",
+        "identify_pain": "Scaling limits and outages",
+        "champion": "Maya Chen",
+        "competition": "Unknown"
+      }
+    },
+    {
+      "id": "006AAA000000002",
+      "name": "Northwind Health . Modernization",
+      "stage": "Negotiation",
+      "amount": 900000,
+      "close_date": "2025-12-28",
+      "last_activity_date": "2025-12-14",
+      "meddpicc": {
+        "metrics": "",
+        "economic_buyer": "CFO",
+        "decision_criteria": "TCO and compliance",
+        "decision_process": "Steering committee",
+        "paper_process": "Procurement review in progress",
+        "identify_pain": "Data center contract ending",
+        "champion": "",
+        "competition": "Azure"
+      }
+    },
+    {
+      "id": "006AAA000000003",
+      "name": "Globex Retail . Data Lake",
+      "stage": "Commit",
+      "amount": 1200000,
+      "close_date": "2026-01-05",
+      "last_activity_date": "2025-12-17",
+      "meddpicc": {
+        "metrics": "Reduce ETL cost 25%",
+        "economic_buyer": "VP IT",
+        "decision_criteria": "Performance and cost",
+        "decision_process": "VP IT sign-off",
+        "paper_process": "Redlines pending",
+        "identify_pain": "ETL cost spikes",
+        "champion": "Analytics Director",
+        "competition": "Snowflake"
+      }
+    }
+  ]
+}
