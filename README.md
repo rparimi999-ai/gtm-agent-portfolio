@@ -77,3 +77,59 @@ shared/
 scripts/
   run_agent.py
   run_all_evals.py
+---
+
+## Run evals locally
+
+```bash
+git clone https://github.com/rparimi999-ai/gtm-agent-portfolio.git
+cd gtm-agent-portfolio
+python scripts/run_all_evals.py
+
+Expected Output:
+lead_qualification: 8 passed, 0 failed
+meeting_followup: 6 passed, 0 failed
+pipeline_risk_inspector: 6 passed, 0 failed
+
+TOTAL: 20 passed, 0 failed
+Evals are the contract. If behavior changes, evals fail.
+
+How to read this repo
+
+If you have limited time:
+
+Read this README.
+
+Skim ARCHITECTURE.md to understand the runtime and guardrails.
+
+Open any agent’s src/agent.py and scan:
+
+decision logic
+
+explanation phrases
+
+action guardrails
+
+Review the eval cases to see how behavior is specified.
+
+This repo is meant to be read, not just executed.
+
+Design principles:
+Mock before integrate
+Behavior is validated before touching real systems.
+Explainability over cleverness
+Every decision produces reasons a human can review.
+Guardrails before autonomy
+Risky actions are approval-gated by default.
+Evals as architecture
+Tests define correctness, not just code paths.
+
+Notes for reviewers
+All agents expose a single run(payload) entrypoint.
+Outputs are structured and bounded.
+Salesforce and Slack are modeled as actions, not side effects.
+CI runs evals on every push.
+
+For deeper context, see:
+ARCHITECTURE.md
+PORTFOLIO_NOTES.md
