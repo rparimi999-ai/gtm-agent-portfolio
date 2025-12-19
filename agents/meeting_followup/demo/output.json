@@ -1,0 +1,72 @@
+{
+  "summary": "Customer wants to migrate ERP and analytics to AWS within two quarters, with security and EU data residency as gating items.",
+  "extracted": {
+    "customer_objectives": [
+      "Migrate core ERP and analytics workloads to AWS within two quarters",
+      "Reduce batch processing time by 40%",
+      "Reduce infrastructure outages"
+    ],
+    "requirements": [
+      "SSO integration",
+      "Encryption at rest",
+      "EU data residency support for EU customers"
+    ],
+    "decision_process": {
+      "technical_owner": "Maya Chen",
+      "approver": "CIO",
+      "paper_process": "Procurement runs paper process",
+      "next_attendee_to_add": "Security lead"
+    },
+    "next_steps": {
+      "customer_actions": [
+        "Schedule security review next Tuesday",
+        "Loop in security lead next week"
+      ],
+      "seller_actions": [
+        "Send high-level migration plan",
+        "Provide estimate",
+        "Confirm EU data residency support"
+      ],
+      "due_dates": [
+        {"item": "Proposal delivered", "date": "2026-01-10"},
+        {"item": "Security review", "date": "2025-12-23"},
+        {"item": "Pilot start (target)", "date": "2026-02-01"}
+      ],
+      "open_questions": [
+        "Which specific ERP and analytics components are in scope for phase 1?",
+        "What are the top security controls required for approval?"
+      ],
+      "risks": [
+        "Security review may delay timeline if requirements are not met",
+        "EU data residency constraints may limit architecture options"
+      ]
+    }
+  },
+  "actions": [
+    {
+      "type": "slack_post",
+      "target": "ae-channel",
+      "risk": "low",
+      "requires_approval": false,
+      "payload": {
+        "message": "Meeting recap . Acme wants ERP+analytics migration to AWS in 2 quarters. Success: -40% batch time, fewer outages. Gating: SSO, encryption at rest, EU data residency. Decision: Maya owns technical eval, CIO approves, Procurement runs paper. Next steps: we send migration plan + estimate, confirm EU residency. Security review next Tue. Proposal due Jan 10."
+      }
+    },
+    {
+      "type": "salesforce_update",
+      "target": "opportunity",
+      "risk": "med",
+      "requires_approval": true,
+      "payload": {
+        "opportunity_id": "006XXXXXXXXXXXX",
+        "fields": {
+          "Next_Step__c": "Send migration plan + estimate. Confirm EU residency support. Schedule security review.",
+          "Risks__c": "Security and EU data residency are gating items.",
+          "Close_Plan__c": "Proposal by Jan 10. Security review next Tue. Pilot target Feb."
+        }
+      }
+    }
+  ],
+  "confidence": 0.83,
+  "requires_approval": true
+}
